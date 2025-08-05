@@ -1,8 +1,7 @@
 import express from 'express';
-import {
+import { 
   triggerEmergency,
-  trackAmbulance,
-  handleBloodRequest
+  trackAmbulance
 } from '../controllers/emergencyController.js';
 import { protect, roleBasedAuth } from '../middleware/auth.js';
 
@@ -16,17 +15,10 @@ router.post('/sos',
 );
 
 // Ambulance tracking
-router.get('/ambulance/:id/track', 
+router.get('/:id/track', 
   protect, 
   roleBasedAuth(['patient', 'admin']), 
   trackAmbulance
-);
-
-// Blood request
-router.post('/blood-request', 
-  protect, 
-  roleBasedAuth(['patient', 'admin']), 
-  handleBloodRequest
 );
 
 export default router;
