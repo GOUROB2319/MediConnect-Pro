@@ -1,12 +1,24 @@
 {
+  "name": "mediconnect-pro",
+  "version": "1.0.0",
+  "description": "Backend for MediConnect Pro Digital Hospital",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
   "dependencies": {
-    "bcryptjs": "^3.0.2",
-    "cloudinary": "^2.7.0",
-    "dotenv": "^17.2.1",
-    "express": "^5.1.0",
-    "google-translate-api": "^2.3.0",
+    "bcryptjs": "^2.4.3",
+    "cloudinary": "^1.40.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.17.0",
-    "twilio": "^5.8.0"
+    "mongoose": "^8.3.4",
+    "twilio": "^4.23.0",
+    "@vitalets/google-translate-api": "^9.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.2"
   }
 }
