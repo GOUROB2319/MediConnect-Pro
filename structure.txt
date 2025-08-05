@@ -1,49 +1,27 @@
 mediconnect-backend/
 ├── config/
-│   ├── db.js                  # MongoDB connection setup
-│   ├── cloudinary.js          # Cloudinary configuration for media uploads
-│   ├── jwtConfig.js           # JWT authentication configuration
-│   └── twilioConfig.js        # Twilio SMS API configuration
+│   ├── db.js
+│   └── cloudinary.js
 ├── controllers/
-│   ├── authController.js      # Authentication logic
-│   ├── userController.js      # User CRUD operations
+│   ├── authController.js
+│   ├── userController.js
 │   ├── appointmentController.js
-│   ├── prescriptionController.js
 │   ├── emergencyController.js
-│   ├── pharmacyController.js
-│   ├── bloodBankController.js
 │   └── notificationController.js
-├── models/
-│   ├── User.js                # User schema (all types)
-│   ├── Appointment.js
-│   ├── Prescription.js
-│   ├── Emergency.js
-│   ├── Pharmacy.js
-│   ├── BloodBank.js
-│   └── Notification.js
 ├── middleware/
-│   ├── auth.js                # Authentication middleware
-│   ├── role.js                # Role-based access control
-│   └── errorHandler.js        # Custom error handling
+│   ├── auth.js
+│   └── errorHandler.js
+├── models/
+│   ├── User.js
+│   ├── Appointment.js
+│   └── Emergency.js
 ├── routes/
 │   ├── authRoutes.js
 │   ├── userRoutes.js
 │   ├── appointmentRoutes.js
-│   ├── prescriptionRoutes.js
-│   ├── emergencyRoutes.js
-│   ├── pharmacyRoutes.js
-│   ├── bloodBankRoutes.js
-│   └── notificationRoutes.js
+│   └── emergencyRoutes.js
 ├── services/
-│   ├── emailService.js        # Email notification service
-│   ├── smsService.js          # SMS notification service
-│   ├── paymentService.js      # Payment processing
-│   └── translationService.js  # Bangla translation service
-├── utils/
-│   ├── geocoder.js            # Location services
-│   ├── queueManager.js        # Appointment queue system
-│   ├── validation.js          # Request validation
-│   └── helpers.js             # Utility functions
-├── .env                       # Environment variables
-├── server.js                  # Main application entry point
-└── package.json
+│   └── notificationService.js
+├── .env
+├── package.json
+└── server.js

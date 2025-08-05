@@ -1,66 +1,54 @@
+import Appointment from '../models/Appointment.js';
 import User from '../models/User.js';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
+import { sendNotification } from '../services/notificationService.js';
 
-// Register user
-export const registerUser = async (req, res) => {
-  const { name, email, password, phone, role } = req.body;
-
+// Book appointment
+export const bookAppointment = async (req, res) => {
   try {
-    // Check if user exists
-    const userExists = await User.findOne({ email });
-    if (userExists) {
-      return res.status(400).json({ message: 'User already exists' });
-    }
-
-    // Create user
-    const user = await User.create({
-      name,
-      email,
-      password: bcrypt.hashSync(password, 10),
-      phone,
-      role
+    const { patientId, doctorId, date, time } = req.body;
+    
+    const appointment = new Appointment({
+      patient: patientId,
+      doctor: doctorId,
+      date,
+      time,
+      status: 'scheduled'
     });
-
-    // Generate token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '30d'
-    });
-
-    res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      token
-    });
+    
+    await appointment.save();
+    
+    // Get doctor and patient details
+    const doctor = await User.findById(doctorId);
+    const patient = await User.findById(patientId);
+    
+    // Send notifications
+    sendNotification(
+      doctor.email,
+      'New Appointment Scheduled',
+      `You have a new appointment with ${patient.name} on ${date} at ${time}`
+    );
+    
+    // Send Bangla notification to patient
+    const banglaMessage = `আপনার ডাক্তারের অ্যাপয়েন্টমেন্ট ${date} তারিখে ${time} সময়ে নির্ধারিত হয়েছে`;
+    sendNotification(patient.phone, 'অ্যাপয়েন্টমেন্ট নিশ্চিতকরণ', banglaMessage, true);
+    
+    res.status(201).json(appointment);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(400).json({ message: error.message });
   }
 };
 
-// Login user
-export const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-
+// Get appointments for user
+export const getUserAppointments = async (req, res) => {
   try {
-    const user = await User.findOne({ email });
+    const userId = req.params.userId;
+    const appointments = await Appointment.find({
+      $or: [{ patient: userId }, { doctor: userId }]
+    })
+    .populate('patient', 'name')
+    .populate('doctor', 'name specialty');
     
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: '30d'
-      });
-
-      res.json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        token
-      });
-    } else {
-      res.status(401).json({ message: 'Invalid email or password' });
-    }
+    res.json(appointments);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
